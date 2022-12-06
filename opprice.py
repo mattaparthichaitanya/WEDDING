@@ -1,0 +1,5 @@
+CE_BUY = int(100)
+PE_BUY = int(150)
+CE_SELL = int(300)
+PE_SELL = int(300)
+print(type(CE_SELL))
