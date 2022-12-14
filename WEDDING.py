@@ -120,20 +120,20 @@ if purathanafile == False:
 else:
     print("EXPIRY-DAY MOWAA E ROJU")
     import strike
-    atmputtoken = api.searchscrip(exchange='NFO',searchtext=strike.PUT)['token']
-    atmcalltoken = api.searchscrip(exchange='NFO',searchtext=strike.CALL)['token']
-    otmputtoken = api.searchscrip(exchange='NFO',searchtext=strike.PUTHEDGE)['token']
-    otmcalltoken = api.searchscrip(exchange='NFO',searchtext=strike.CALLHEDGE)['token']
+    atmputtoken = api.get_quotes('NFO', strike.PUT)['token']
+    atmcalltoken = api.get_quotes('NFO', strike.CALL)['token']
+    otmputtoken = api.get_quotes('NFO', strike.PUTHEDGE)['token']
+    otmcalltoken = api.get_quotes('NFO', strike.CALLHEDGE)['token']
     feed_opened = False
     feedJson = {}
     socket_opened = False
     orderJson = {}
     def evert_handler_feed_update(message):
-        print(message)
+        # print(message)
         if(('lp'in message)&('tk'in message)):
             feedJson[message['tk']]={'ltp':float(message['lp'])}
     def event_handler_order_update(inmessage):
-        print(inmessage)
+        # print(inmessage)
         if(('norenordno' in inmessage) & ('status' in inmessage)):
             orderJson[inmessage['norenordno']]={'status': inmessage['status']}
     def open_callback():
