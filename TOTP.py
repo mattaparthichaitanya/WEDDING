@@ -7,3 +7,4 @@ pin = f"{(pin):5}"
 
 # pin = f"{int(pin):06d}" if len(pin) <= 5 else pin
 print("LOGIN AYYA MOWAA")
+print(pin)
