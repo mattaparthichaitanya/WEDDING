@@ -1,8 +1,8 @@
 from datetime import datetime
 import time
 ###########################
-shour = 13
-smin = 34
+shour = 15
+smin = 26
 ####################################
 hour = abs(shour-5)
 if smin < 30:
