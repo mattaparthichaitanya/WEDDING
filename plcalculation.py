@@ -1,7 +1,7 @@
 import pricedata
 maxprofit = ((pricedata.PESELL+pricedata.CESELL)-(pricedata.PEBUY+pricedata.CEBUY))*25
-# exitprofit = round(int(float(maxprofit/3)),-2)
-exitprofit = 500
+exitprofit = round(int(float(maxprofit/3)),-2)
+# exitprofit = 500
 print("profit",exitprofit)
 exitloss = -exitprofit
 print('loss',exitloss)
