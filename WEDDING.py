@@ -27,7 +27,9 @@ lastBusDay = lastBusDay.replace(hour=WeddingWaitTime.hour, minute=WeddingWaitTim
 # lastBusDay = lastBusDay.replace(hour=9, minute=58, second=0, microsecond=0)
 k = lastBusDay.timestamp()
 ret = api.get_time_price_series(exchange='NSE', token=token, starttime=lastBusDay.timestamp(),endtime=lastBusDay.timestamp(), interval=1)
-bnclose = ret[0]['intc']
+bnclose = api.get_quotes(exchange='NSE',token=token)['lp']
+print(bnclose)
+# exit()
 print("BANKNIFTY-BASE",bnclose)
 option_ki_dari_edi = round((int(float(bnclose))), -2)
 cehedge_ki_dari_edi = option_ki_dari_edi+1000
@@ -76,7 +78,7 @@ if purathanafile == False:
         #Hedges
         CEHEDGE = api.place_order(buy_or_sell='B', product_type='M',
                         exchange='NFO', tradingsymbol=callhedge,
-                        quantity=25, discloseqty=0, price_type='MKT',
+                        quantity=15, discloseqty=0, price_type='MKT',
                         retention='DAY', remarks=' CE BOUGHT')
         ret = api.get_order_book()
         cebuy = str(float(ret[0]['avgprc']))
@@ -85,7 +87,7 @@ if purathanafile == False:
         file.close()
         PEHEDGE = api.place_order(buy_or_sell='B', product_type='M',
                         exchange='NFO', tradingsymbol=puthedge,
-                        quantity=25, discloseqty=0, price_type='MKT',
+                        quantity=15, discloseqty=0, price_type='MKT',
                         retention='DAY', remarks=' PE BOUGHT')
         ret = api.get_order_book()
         pebuy = str(float(ret[0]['avgprc']))
@@ -97,7 +99,7 @@ if purathanafile == False:
         #ATM
         ATMCE = api.place_order(buy_or_sell='S', product_type='M',
                         exchange='NFO', tradingsymbol=call,
-                        quantity=25, discloseqty=0, price_type='MKT',
+                        quantity=15, discloseqty=0, price_type='MKT',
                         retention='DAY', remarks=' CE SOLD')
         ret = api.get_order_book()
         cesell = str(float(ret[0]['avgprc']))
@@ -106,7 +108,7 @@ if purathanafile == False:
         file.close()
         ATMPE = api.place_order(buy_or_sell='S', product_type='M',
                         exchange='NFO', tradingsymbol=put,
-                        quantity=25, discloseqty=0, price_type='MKT',
+                        quantity=15, discloseqty=0, price_type='MKT',
                         retention='DAY', remarks=' PE SOLD')
         ret = api.get_order_book()
         pesell = float(ret[0]['avgprc'])
@@ -204,7 +206,7 @@ else:
             from colorama import Fore,Back,Style
             colorama.init()
             import os
-            current_profit_or_loss = (atmpl+otmpl)*25
+            current_profit_or_loss = (atmpl+otmpl)*15
             if current_profit_or_loss >= 0:
                 print(Style.BRIGHT+Fore.GREEN+"PROFIT of = ",current_profit_or_loss)
                 time.sleep(1)
@@ -218,23 +220,23 @@ else:
             #     #ATM BUY
                 ATMCE = api.place_order(buy_or_sell='B', product_type='M',
                                         exchange='NFO', tradingsymbol=strike.CALL,
-                                        quantity=25, discloseqty=0, price_type='MKT',
+                                        quantity=15, discloseqty=0, price_type='MKT',
                                         retention='DAY', remarks=' CE BOUGHT')
 
                 ATMPE = api.place_order(buy_or_sell='B', product_type='M',
                                         exchange='NFO', tradingsymbol=strike.PUT,
-                                        quantity=25, discloseqty=0, price_type='MKT',
+                                        quantity=15, discloseqty=0, price_type='MKT',
                                         retention='DAY', remarks=' PE BOUGHT')
                 time.sleep(1)
                 #OTM SELL
                 CEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
                                           exchange='NFO', tradingsymbol=strike.CALLHEDGE,
-                                          quantity=25, discloseqty=0, price_type='MKT',
+                                          quantity=15, discloseqty=0, price_type='MKT',
                                           retention='DAY', remarks=' CE BOUGHT')
 
                 PEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
                                           exchange='NFO', tradingsymbol=strike.PUTHEDGE,
-                                          quantity=25, discloseqty=0, price_type='MKT',
+                                          quantity=15, discloseqty=0, price_type='MKT',
                                           retention='DAY', remarks=' PE BOUGHT')
                 exit()
             if current_profit_or_loss <= plcalculation.exitloss:
@@ -242,23 +244,23 @@ else:
                    #ATM BUY
                 ATMCE = api.place_order(buy_or_sell='B', product_type='M',
                                         exchange='NFO', tradingsymbol=strike.CALL,
-                                        quantity=25, discloseqty=0, price_type='MKT',
+                                        quantity=15, discloseqty=0, price_type='MKT',
                                         retention='DAY', remarks=' CE BOUGHT')
 
                 ATMPE = api.place_order(buy_or_sell='B', product_type='M',
                                         exchange='NFO', tradingsymbol=strike.PUT,
-                                        quantity=25, discloseqty=0, price_type='MKT',
+                                        quantity=15, discloseqty=0, price_type='MKT',
                                         retention='DAY', remarks=' PE BOUGHT')
                 time.sleep(1)
                 #OTM SELL
                 CEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
                                           exchange='NFO', tradingsymbol=strike.CALLHEDGE,
-                                          quantity=25, discloseqty=0, price_type='MKT',
+                                          quantity=15, discloseqty=0, price_type='MKT',
                                           retention='DAY', remarks=' CE BOUGHT')
 
                 PEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
                                           exchange='NFO', tradingsymbol=strike.PUTHEDGE,
-                                          quantity=25, discloseqty=0, price_type='MKT',
+                                          quantity=15, discloseqty=0, price_type='MKT',
                                           retention='DAY', remarks=' PE BOUGHT')
             
                 exit()
@@ -268,23 +270,23 @@ else:
                    #ATM BUY
                 ATMCE = api.place_order(buy_or_sell='B', product_type='M',
                                         exchange='NFO', tradingsymbol=strike.CALL,
-                                        quantity=25, discloseqty=0, price_type='MKT',
+                                        quantity=15, discloseqty=0, price_type='MKT',
                                         retention='DAY', remarks=' CE BOUGHT')
 
                 ATMPE = api.place_order(buy_or_sell='B', product_type='M',
                                         exchange='NFO', tradingsymbol=strike.PUT,
-                                        quantity=25, discloseqty=0, price_type='MKT',
+                                        quantity=15, discloseqty=0, price_type='MKT',
                                         retention='DAY', remarks=' PE BOUGHT')
                 time.sleep(1)
                 #OTM SELL
                 CEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
                                           exchange='NFO', tradingsymbol=strike.CALLHEDGE,
-                                          quantity=25, discloseqty=0, price_type='MKT',
+                                          quantity=15, discloseqty=0, price_type='MKT',
                                           retention='DAY', remarks=' CE BOUGHT')
 
                 PEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
                                           exchange='NFO', tradingsymbol=strike.PUTHEDGE,
-                                          quantity=25, discloseqty=0, price_type='MKT',
+                                          quantity=15, discloseqty=0, price_type='MKT',
                                           retention='DAY', remarks=' PE BOUGHT')
                
                 exit()

@@ -19,7 +19,11 @@ ok = api.set_session(userid=credentials.user, password=credentials.u_pwd, userto
 # # ltp = api.get_quotes (config.exchange,config.instrument)
 ltp = api.get_quotes('NSE','INFY-EQ')['lp']
 # inter = int(float(ltp))
-print(ltp)
+while True:
+    print(ltp)
+    time.sleep(1)
+
+
 
 
 
