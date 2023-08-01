@@ -2,7 +2,7 @@ from datetime import datetime
 import time
 ###########################
 shour = 9
-smin = 15
+smin = 16
 ####################################
 hour = abs(shour-5)
 if smin < 30:
@@ -11,7 +11,7 @@ if smin < 30:
 else:
     minutes = abs(smin - 30)
 squareoffhour = 15
-squareoffmin = 15
+squareoffmin = 35
 now = datetime.now()
 print(minutes)
 print(hour)

@@ -163,144 +163,181 @@ else:
     setupWebSocket()
     api.subscribe([f'NFO|{atmputtoken}',f'NFO|{atmcalltoken}',f'NFO|{otmcalltoken}',f'NFO|{otmputtoken}'])
     time.sleep(1)
-    while True:
-        if purathanafile == True:
-            import weddingexpirydaywaittime
-            import strike
-            cp_pehedge = round(int(float(feedJson[otmputtoken]['ltp'])))
-            cp_cehedge = round(int(float(feedJson[otmcalltoken]['ltp'])))
-            cp_ceatm = round(int(float(feedJson[atmcalltoken]['ltp'])))
-            cp_putatm = round(int(float(feedJson[atmputtoken]['ltp'])))
-            # print(cp_pehedge)
-            # print(cp_cehedge)
-            # print(cp_ceatm)
-            # print(cp_putatm)
-            # print("CP HEDGE MOWAA",cp_pehedge)
-            # print("################################")
-            # print("################################")
-            # print("################################")
-            # print("################################")
+    import time
+    import os
+    import threading
 
-            #################################################################
-            import pricedata
-            import plcalculation
-            #################################################################
-            if cp_pehedge >= pricedata.PEBUY:
-                finalphedge = round(-(pricedata.PEBUY-cp_pehedge))
-            if cp_pehedge <= pricedata.PEBUY:
-                finalphedge = round(cp_pehedge-pricedata.PEBUY)
-                ###################################
-            if cp_cehedge >= pricedata.CEBUY:
-                finalchedge = round(-(pricedata.CEBUY - cp_cehedge))
-            if cp_cehedge <= pricedata.CEBUY:
-                finalchedge = round(cp_cehedge-pricedata.CEBUY)
-                ##################################
-            if cp_ceatm >= pricedata.CESELL:
-                finalce =  round(pricedata.CESELL-cp_ceatm)
-            if cp_ceatm <= pricedata.CESELL:
-                finalce =  round(pricedata.CESELL-cp_ceatm)
-                #################################
-            if cp_putatm >= pricedata.PESELL:
-                finalpe =  round(pricedata.PESELL-cp_putatm)
-            if cp_putatm <= pricedata.PESELL:
-                finalpe =  round(pricedata.PESELL-cp_putatm)
-                #################################
-            # print("finalce",finalce)
-            # print("finalpe",finalpe)
-            # print("finalchedge",finalchedge)
-            # print("finalphedge",finalphedge)
-            atmpl = finalce+finalpe
-            otmpl = finalchedge+finalphedge
-            # print(atmpl)
-            # print(otmpl)
-            import colorama
-            from colorama import Fore,Back,Style
-            colorama.init()
-            import os
-            current_profit_or_loss = (atmpl+otmpl)*15
-            if current_profit_or_loss >= 0:
-                print(Style.BRIGHT+Fore.GREEN+"PROFIT of = ",current_profit_or_loss)
-                time.sleep(1)
-                os.system('clear')
-            if current_profit_or_loss <= 0:
-                print(Style.BRIGHT+Fore.RED+"LOSS of = ",current_profit_or_loss)
-                time.sleep(2)
-                os.system('clear')
-            if current_profit_or_loss >= plcalculation.exitprofit:
-                print(Style.BRIGHT,Fore.GREEN,"BOOKED PROFIT")
-            #     #ATM BUY
-                ATMCE = api.place_order(buy_or_sell='B', product_type='M',
-                                        exchange='NFO', tradingsymbol=strike.CALL,
-                                        quantity=15, discloseqty=0, price_type='MKT',
-                                        retention='DAY', remarks=' CE BOUGHT')
+    def keep_alive():
+        while True:
+            with open('keep_alive.txt', 'a') as f:
+                f.write(time.ctime() + '\n')
+            time.sleep(60)
 
-                ATMPE = api.place_order(buy_or_sell='B', product_type='M',
-                                        exchange='NFO', tradingsymbol=strike.PUT,
-                                        quantity=15, discloseqty=0, price_type='MKT',
-                                        retention='DAY', remarks=' PE BOUGHT')
-                time.sleep(1)
-                #OTM SELL
-                CEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
-                                          exchange='NFO', tradingsymbol=strike.CALLHEDGE,
-                                          quantity=15, discloseqty=0, price_type='MKT',
-                                          retention='DAY', remarks=' CE BOUGHT')
+    t = threading.Thread(target=keep_alive)
+    t.start()
+    from notify_run import Notify
+    import os
+    import signal
+    import time
 
-                PEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
-                                          exchange='NFO', tradingsymbol=strike.PUTHEDGE,
-                                          quantity=15, discloseqty=0, price_type='MKT',
-                                          retention='DAY', remarks=' PE BOUGHT')
-                exit()
-            if current_profit_or_loss <= plcalculation.exitloss:
-                print(Style.BRIGHT,Fore.RED,"BOOKED LOSS")
-                   #ATM BUY
-                ATMCE = api.place_order(buy_or_sell='B', product_type='M',
-                                        exchange='NFO', tradingsymbol=strike.CALL,
-                                        quantity=15, discloseqty=0, price_type='MKT',
-                                        retention='DAY', remarks=' CE BOUGHT')
+    # Register notify-run
+    os.system('notify-run register')
+    input("Press Enter to continue...")
+    # # Wait for the user to click on the link generated by the notify-run register command
+    
 
-                ATMPE = api.place_order(buy_or_sell='B', product_type='M',
-                                        exchange='NFO', tradingsymbol=strike.PUT,
-                                        quantity=15, discloseqty=0, price_type='MKT',
-                                        retention='DAY', remarks=' PE BOUGHT')
-                time.sleep(1)
-                #OTM SELL
-                CEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
-                                          exchange='NFO', tradingsymbol=strike.CALLHEDGE,
-                                          quantity=15, discloseqty=0, price_type='MKT',
-                                          retention='DAY', remarks=' CE BOUGHT')
+    # Create a Notify object
+    notify = Notify()
 
-                PEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
-                                          exchange='NFO', tradingsymbol=strike.PUTHEDGE,
-                                          quantity=15, discloseqty=0, price_type='MKT',
-                                          retention='DAY', remarks=' PE BOUGHT')
-            
-                exit()
-            if ((datetime.datetime.now()).time()).hour == 9 and (
-            (datetime.datetime.now()).time()).minute >= 45:
-                print("SQUARED OFF")
-                   #ATM BUY
-                ATMCE = api.place_order(buy_or_sell='B', product_type='M',
-                                        exchange='NFO', tradingsymbol=strike.CALL,
-                                        quantity=15, discloseqty=0, price_type='MKT',
-                                        retention='DAY', remarks=' CE BOUGHT')
+    # Define a signal handler function
+    def signal_handler(sig, frame):
+        notify.send('ఏంది మోవా strategy ఆపేశావ్ ')
+        exit(0)
 
-                ATMPE = api.place_order(buy_or_sell='B', product_type='M',
-                                        exchange='NFO', tradingsymbol=strike.PUT,
-                                        quantity=15, discloseqty=0, price_type='MKT',
-                                        retention='DAY', remarks=' PE BOUGHT')
-                time.sleep(1)
-                #OTM SELL
-                CEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
-                                          exchange='NFO', tradingsymbol=strike.CALLHEDGE,
-                                          quantity=15, discloseqty=0, price_type='MKT',
-                                          retention='DAY', remarks=' CE BOUGHT')
+    # Register the signal handler function for the SIGINT signal
+    signal.signal(signal.SIGINT, signal_handler)
+    try:
+        while True:
+            if purathanafile == True:
+                import weddingexpirydaywaittime
+                import strike
+                cp_pehedge = round(int(float(feedJson[otmputtoken]['ltp'])))
+                cp_cehedge = round(int(float(feedJson[otmcalltoken]['ltp'])))
+                cp_ceatm = round(int(float(feedJson[atmcalltoken]['ltp'])))
+                cp_putatm = round(int(float(feedJson[atmputtoken]['ltp'])))
+                # print(cp_pehedge)
+                # print(cp_cehedge)
+                # print(cp_ceatm)
+                # print(cp_putatm)
+                # print("CP HEDGE MOWAA",cp_pehedge)
+                # print("################################")
+                # print("################################")
+                # print("################################")
+                # print("################################")
 
-                PEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
-                                          exchange='NFO', tradingsymbol=strike.PUTHEDGE,
-                                          quantity=15, discloseqty=0, price_type='MKT',
-                                          retention='DAY', remarks=' PE BOUGHT')
-               
-                exit()
+                #################################################################
+                import pricedata
+                import plcalculation
+                #################################################################
+                if cp_pehedge >= pricedata.PEBUY:
+                    finalphedge = round(-(pricedata.PEBUY-cp_pehedge))
+                if cp_pehedge <= pricedata.PEBUY:
+                    finalphedge = round(cp_pehedge-pricedata.PEBUY)
+                    ###################################
+                if cp_cehedge >= pricedata.CEBUY:
+                    finalchedge = round(-(pricedata.CEBUY - cp_cehedge))
+                if cp_cehedge <= pricedata.CEBUY:
+                    finalchedge = round(cp_cehedge-pricedata.CEBUY)
+                    ##################################
+                if cp_ceatm >= pricedata.CESELL:
+                    finalce =  round(pricedata.CESELL-cp_ceatm)
+                if cp_ceatm <= pricedata.CESELL:
+                    finalce =  round(pricedata.CESELL-cp_ceatm)
+                    #################################
+                if cp_putatm >= pricedata.PESELL:
+                    finalpe =  round(pricedata.PESELL-cp_putatm)
+                if cp_putatm <= pricedata.PESELL:
+                    finalpe =  round(pricedata.PESELL-cp_putatm)
+                    #################################
+                # print("finalce",finalce)
+                # print("finalpe",finalpe)
+                # print("finalchedge",finalchedge)
+                # print("finalphedge",finalphedge)
+                atmpl = finalce+finalpe
+                otmpl = finalchedge+finalphedge
+                # print(atmpl)
+                # print(otmpl)
+                # import colorama
+                # from colorama import Fore,Back,Style
+                # colorama.init()
+                # import os
+                current_profit_or_loss = (atmpl+otmpl)*15
+                if current_profit_or_loss >= 0:
+                    print("PROFIT of = ",current_profit_or_loss)
+                    time.sleep(1)
+                    os.system('clear')
+                if current_profit_or_loss <= 0:
+                    print("LOSS of = ",current_profit_or_loss)
+                    time.sleep(2)
+                    os.system('clear')
+                if current_profit_or_loss >= plcalculation.exitprofit:
+                    print("BOOKED PROFIT")
+                #     #ATM BUY
+                    ATMCE = api.place_order(buy_or_sell='B', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.CALL,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' CE BOUGHT')
+
+                    ATMPE = api.place_order(buy_or_sell='B', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.PUT,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' PE BOUGHT')
+                    time.sleep(1)
+                    #OTM SELL
+                    CEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.CALLHEDGE,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' CE BOUGHT')
+
+                    PEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.PUTHEDGE,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' PE BOUGHT')
+                    exit()
+                if current_profit_or_loss <= plcalculation.exitloss:
+                    print("BOOKED LOSS")
+                    #ATM BUY
+                    ATMCE = api.place_order(buy_or_sell='B', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.CALL,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' CE BOUGHT')
+
+                    ATMPE = api.place_order(buy_or_sell='B', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.PUT,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' PE BOUGHT')
+                    time.sleep(1)
+                    #OTM SELL
+                    CEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.CALLHEDGE,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' CE BOUGHT')
+
+                    PEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.PUTHEDGE,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' PE BOUGHT')
+                
+                    exit()
+                if ((datetime.datetime.now()).time()).hour == 9 and (
+                (datetime.datetime.now()).time()).minute >= 45:
+                    print("SQUARED OFF")
+                    #ATM BUY
+                    ATMCE = api.place_order(buy_or_sell='B', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.CALL,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' CE BOUGHT')
+
+                    ATMPE = api.place_order(buy_or_sell='B', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.PUT,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' PE BOUGHT')
+                    time.sleep(1)
+                    #OTM SELL
+                    CEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.CALLHEDGE,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' CE BOUGHT')
+
+                    PEHEDGE = api.place_order(buy_or_sell='S', product_type='M',
+                                            exchange='NFO', tradingsymbol=strike.PUTHEDGE,
+                                            quantity=15, discloseqty=0, price_type='MKT',
+                                            retention='DAY', remarks=' PE BOUGHT')
+                
+                    exit()
+    except Exception as e:
+        notify = Notify()
+    notify.send(f'ఆగిపోయింది రా అయ్యా : {e}')
 
 
 
