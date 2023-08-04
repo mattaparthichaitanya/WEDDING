@@ -22,15 +22,16 @@ from pathlib import Path
 import credentials
 from api_helper import ShoonyaApiPy
 api = ShoonyaApiPy()
-ret = api.login(userid=credentials.user, password=credentials.u_pwd, twoFA=credentials.factor2, vendor_code=credentials.vc, api_secret=credentials.app_key, imei=credentials.imei)
-ret = ret['susertoken']
-f = open('TOKEN','w+')
-f.write(ret)
-f.close()
-print("TOKEN GENERATED")
+# ret = api.login(userid=credentials.user, password=credentials.u_pwd, twoFA=credentials.factor2, vendor_code=credentials.vc, api_secret=credentials.app_key, imei=credentials.imei)
+# ret = ret['susertoken']
+# f = open('TOKEN','w+')
+# f.write(ret)
+# f.close()
+# print("TOKEN GENERATED")
 # exit()
 # api = ShoonyaApiPy()
 today = date.today()
+
 yesterday = today-timedelta(days=1)
 ###########################
 #########Main Login #############
@@ -38,10 +39,10 @@ yesterday = today-timedelta(days=1)
 # ret = ret['susertoken']
 # f = open('TOKEN','w+')
 # f.write(ret)
-# f.close()
+# f.close()n
 
-squareoffhour = 16
-squareoffmin = 1
+squareoffhour = 15
+squareoffmin = 31
 
 
 
