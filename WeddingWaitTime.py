@@ -1,8 +1,8 @@
 from datetime import datetime
 import time
 ###########################
-shour = 15
-smin = 15
+shour = 9
+smin = 16
 squareoffhour = 15
 squareoffmin = 35
 ####################################

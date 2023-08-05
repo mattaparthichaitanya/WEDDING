@@ -18,7 +18,9 @@ from pathlib import Path
 # f.write(ret)
 # f.close()
 # print("TOKEN GENERATED")
-
+import tgen
+with open("tgen.py") as f:
+    exec(f.read()) 
 import credentials
 from api_helper import ShoonyaApiPy
 api = ShoonyaApiPy()
