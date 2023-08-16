@@ -44,8 +44,8 @@ yesterday = today-timedelta(days=1)
 # f.write(ret)
 # f.close()n
 
-squareoffhour = 23
-squareoffmin = 31
+squareoffhour = 17
+squareoffmin = 1
 
 
 
@@ -281,11 +281,11 @@ else:
                 # import os
                 current_profit_or_loss = (atmpl+otmpl)*15
                 if current_profit_or_loss >= 0:
-                    print("PROFIT of = ",current_profit_or_loss)
+                    print("PT of = ",current_profit_or_loss)
                     time.sleep(1)
                     os.system('clear')
                 if current_profit_or_loss <= 0:
-                    print("LOSS of = ",current_profit_or_loss)
+                    print("LS of = ",current_profit_or_loss)
                     time.sleep(2)
                     os.system('clear')
                 if current_profit_or_loss >= plcalculation.exitprofit:

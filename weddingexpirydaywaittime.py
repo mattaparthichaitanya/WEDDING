@@ -1,7 +1,7 @@
 from datetime import datetime
 import time
 ###########################
-shour = 9
+shour =9
 smin = 16
 ####################################
 hour = abs(shour-5)
